@@ -36,6 +36,10 @@ app.post('/api/shorturl/new', (req, res) => {
         try {
             // check valid url
             const realUrl = new URL(req.body.url)
+            console.log(realUrl.protocol);
+            if (!['https:', 'http:'].includes(realUrl.protocol)) {
+                return res.json({ error: 'invalid url' })
+            }
             dns.lookup(realUrl.hostname, (error, address, family) => {
                 if (error) return res.json({ error: 'invalid url' })
                 //create short url
