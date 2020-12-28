@@ -58,26 +58,26 @@ app.post('/api/shorturl/new', (req, res) => {
                     if (error.keyValue.original_url) {
                         Url.findOne({ original_url: error.keyValue.original_url }).then((doc) => {
                             if (!doc) {
-                                return res.status(404).send()
+                                res.json({ error: 'invalid url' })
                             }
                             res.json({
                                 original_url: doc.original_url,
                                 short_url: doc.short_url
                             })
                         }).catch((error) => {
-                            res.status(400).send()
+                            res.json({ error: 'invalid url' })
                         })
                     } else {
-                        res.status(400).send()
+                        res.json({ error: 'invalid url' })
                     }
                 })
             })
         } catch (error) {
-            return res.json({ error: 'invalid url' })
+            res.json({ error: 'invalid url' })
         }
 
     } else {
-        return res.json({ error: 'invalid url' })
+        res.json({ error: 'invalid url' })
     }
 
 })
@@ -87,11 +87,11 @@ app.get('/api/shorturl/:shortUrl', (req, res) => {
     const shortUrl = req.params.shortUrl
     Url.findOne({ short_url: shortUrl }).then((doc) => {
         if (!doc) {
-            return res.status(404).send()
+            return res.json({ error: 'invalid url' })
         }
         res.redirect(doc.original_url)
     }).catch((error) => {
-        res.status(400).send()
+        res.json({ error: 'invalid url' })
     })
 })
 
